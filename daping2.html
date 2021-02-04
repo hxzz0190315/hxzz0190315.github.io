@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>东方神鹰冷库作业监控中心</title>
+
+		<link rel="stylesheet" href="css/el-index.css">
+		<!-- 引入组件库 -->
+		<script src="js/vue.js"></script>
+		<script src="js/el-index.js"></script>
+		<!--调试版-->
+		<script src="js/datav.map.vue.js"></script>
+		<!--压缩版 生产版本-->
+		<!-- <script src="https://unpkg.com/@jiaminghi/data-view/dist/datav.min.vue.js"></script> -->
+
+	</head>
+	<body>
+		<div id="app" style="background-color: #070A17" v-cloak>
+			<dv-full-screen-container>
+				<el-row type="flex" justify="center" style="padding:10px 0">
+					<el-col :span="4">
+						<dv-decoration-8 style="width:300px;height:50px;" />
+					</el-col>
+					<el-col :span="4" style="text-align: center;">
+						<img src="img/qqyouxianlogo.png" style="width: 110px; margin-top: 10px;">
+					</el-col>
+
+					<el-col :span="8">
+						<div style="color:#FFFFFF;font-size:30px;font-weight:600;text-align:center">{{systemName}}</div>
+						<dv-decoration-5 dur='4' style="width:300px;height:40px;margin:0 auto" />
+					</el-col>
+					<el-col :span="4" style="text-align: center; padding-top: 10px;">
+						<el-select v-model="option_hxqy" filterable placeholder="请选择" size="small" style="width: 80%;">
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+							</el-option>
+						</el-select>
+					</el-col>
+					<el-col :span="4">
+						<dv-decoration-8 :reverse="true" style="width:300px;height:50px;margin-left:auto" />
+					</el-col>
+				</el-row>
+				<el-row style="padding:10px 20px">
+					<el-col :span="24">
+						<el-row style="padding:5px 0">
+							<el-col :span="4" v-for="(item,index) in areaList">
+								<div class="card-body ranking-board">
+									<div class="card-title">
+										<dv-decoration-7 style="width:180px;height:30px;margin:0 auto"><span class="padding-lr">{{areaList[index]}}</span></dv-decoration-7>
+									</div>
+									<div class="card-content">
+										<span class="card-tag"></span>
+										<span class="card-number text-green">{{areaNumList[index]}}</span>
+									</div>
+								</div>
+							</el-col>
+						</el-row>
+					</el-col>
+				</el-row>
+
+				<dv-decoration-10 style="width:90%;height:5px;margin-left:5%"></dv-decoration-10>
+				<el-row style="padding:10px 20px">
+					<el-col :span="5" class="">
+						<div class="margin-lr ranking-board">
+							<div class="card-title">
+								<dv-decoration-7 style="width:180px;height:30px;margin:0 auto"><span class="padding-lr">借款人排行</span></dv-decoration-7>
+							</div>
+							<dv-scroll-ranking-board :config="jiekuanrList" style="height:280px" />
+						</div>
+					</el-col>
+					<el-col :span="9">
+						<div class="margin-lr ranking-board" style="height:350px">
+							<div class="card-title">
+								<dv-decoration-7 style="width:180px;height:30px;margin:0 auto"><span class="padding-lr">近期业务统计</span></dv-decoration-7>
+							</div>
+
+							<div class="card-content">
+								<dv-charts :option="storagechangeList" style="width:100%;height:260px;margin:0 auto"></dv-charts>
+							</div>
+
+						</div>
+
+					</el-col>
+					<el-col :span="5">
+						<div class="margin-lr ranking-board" style="height:350px">
+							<div class="card-title">
+								<dv-decoration-7 style="width:180px;height:30px;margin:0 auto"><span class="padding-lr">品类分布</span></dv-decoration-7>
+							</div>
+							<dv-charts :option="productList" style="width:100%;height:320px;margin:0 auto"></dv-charts>
+						</div>
+					</el-col>
+					<el-col :span="5">
+						<div class="margin-lr ranking-board" style="height:350px">
+							<div class="card-title">
+								<dv-decoration-7 style="width:180px;height:30px;margin:0 auto"><span class="padding-lr">港口分布</span></dv-decoration-7>
+							</div>
+							<dv-charts :option="gangkoutList" style="width:100%;height:320px;margin:0 auto"></dv-charts>
+						</div>
+					</el-col>
+				</el-row>
+				<el-row style="padding:10px 20px">
+					<el-col :span="9">
+						<div class="margin-lr ranking-board" style="height:350px;padding-right: 10px;">
+							<div class="card-title">
+								<dv-decoration-7 style="width:180px;height:30px;margin:0 auto; text-align: center;"><span class="padding-lr">今日融资申请</span></dv-decoration-7>
+							</div>
+							<dv-scroll-board :config="rongziList" style="width:100%;height:260px; text-align: center;" />
+						</div>
+					</el-col>
+
+					<el-col :span="9">
+						<div class="margin-lr ranking-board" style="height:350px">
+							<div class="card-title">
+								<dv-decoration-7 style="width:180px;height:30px;margin:0 auto"><span class="padding-lr">今日还款</span></dv-decoration-7>
+							</div>
+							<dv-scroll-board :config="warnList" style="width:100%;height:260px;text-align: center; " />
+						</div>
+					</el-col>
+					<el-col :span="6">
+						<div class="margin-lr ranking-board" style="height:350px">
+							<div class="card-title">
+								<dv-decoration-7 style="width:180px;height:30px;margin:0 auto"><span class="padding-lr">融资协议</span></dv-decoration-7>
+							</div>
+							
+						</div>
+					</el-col>
+				</el-row>
+			</dv-full-screen-container>
+
+		</div>
+
+		<script>
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+							options: [{
+							  value: '选项1',
+							  label: '新协航国际物流有限公司'
+							}, {
+							  value: '选项2',
+							  label: '青岛品物科技有限公司'
+							}],
+						option_hxqy: '新协航国际物流有限公司',
+						gettime: '',
+						jaonangList: [{
+							  name: '南阳',
+							  value: 167
+							}
+						  ],
+						companyName: "",
+						systemName: "中国工商银行供应链金融监控中心",
+						areaList: [  "已占用额度","剩余总额度","借款人户数", "累计融资笔数", "累计融资金额","平均占用天数"],
+						areaNumList: [ "20,000万元","30000","35", "350", "23,456万元","30"],
+						workList: {
+							header: ['月台', '车辆', '柜号', '类型'],
+							data: [
+								['C库-2月台', '鲁B00232', 'CHDG0023432', '出库'],
+								['C库-2月台', '鲁B00232', 'CHDG0023432', '入库'],
+								['C库-2月台', '鲁B00232', 'CHDG0023432', '出库'],
+								['C库-2月台', '鲁B00232', 'CHDG0023432', '入库'],
+								['C库-2月台', '鲁B00232', 'CHDG0023432', '入库'],
+								['C库-2月台', '鲁B00232', 'CHDG0023432', '出库'],
+								['C库-2月台', '鲁B00232', 'CHDG0023432', '入库'],
+								['C库-2月台', '鲁B00232', 'CHDG0023432', '出库'],
+								['C库-2月台', '鲁B00232', 'CHDG0023432', '出库']
+
+							],
+							index: false,
+							columnWidth: [140, 100, 150, 60],
+							align: ['center']
+						},
+						rongziList: {
+							header: ['核心企业', '融资单号','借款人', '合同金额','融资金额'],
+							data: [
+								['青岛品物科技有限公司', '41094909-8','包头市博克食品有限责任公司',  '2541.25', '2541.25'],
+								['青岛品物科技有限公司', '41094909-8','包头市博克食品有限责任公司',  '2541.25', '2541.25'],
+								['青岛品物科技有限公司', '41094909-8','包头市博克食品有限责任公司',  '2541.25', '2541.25'],
+								['青岛品物科技有限公司', '41094909-8','包头市博克食品有限责任公司',  '2541.25', '2541.25'],
+								['青岛品物科技有限公司', '41094909-8','包头市博克食品有限责任公司',  '2541.25', '2541.25'],
+							],
+							index: false,
+							columnWidth: [ 240,140,240, 120, 120],
+							align: ['center'],
+							rowNum:'6'
+						},
+						warnList: {
+							header: ['核心企业', '融资单号','借款人', '合同金额', '还款金额'],
+							data: [
+								['青岛品物科技有限公司', '41094909-8','包头市博克食品有限责任公司',  '2541.25', '2541.25'],
+								['青岛品物科技有限公司', '41094909-8','包头市博克食品有限责任公司',  '2541.25', '2541.25'],
+								['青岛品物科技有限公司', '41094909-8','包头市博克食品有限责任公司',  '2541.25', '2541.25'],
+								['青岛品物科技有限公司', '41094909-8','包头市博克食品有限责任公司',  '2541.25', '2541.25'],
+								['青岛品物科技有限公司', '41094909-8','包头市博克食品有限责任公司',  '2541.25', '2541.25'],
+							],
+							index: false,
+							columnWidth: [ 240,140,240, 120, 120],
+							align: ['center'],
+							rowNum:'6'
+						},
+						storagechangeList:{
+							  title: {
+								text: ''
+							  },
+							  legend: {
+								data: ['融资金额', '还款金额'],
+								textStyle: {
+								  fontSize: 13,
+								  fill: '#fff'
+								}
+							  },
+							  xAxis: {
+								  axisLabel: {
+								  	style: {
+								  		fill: '#fff',
+								  		fontSize: 10,
+								  		rotate: 0
+								  	}
+								  },
+								  axisLine: {
+								  	style: {
+								  		stroke: '#fff',
+								  		lineWidth: 1
+								  	}
+								  },
+								  nameTextStyle: {
+								  	fill: '#67e0e3',
+								  	fontSize: 14
+								  },
+								name: '',
+								data: ['2020-12-06', '2020-12-13', '2020-12-20', '2020-12-27', '2021-01-03', '2021-01-10', '2021-01-17']
+							  },
+							  yAxis: {
+								  splitLine: {
+									show: false
+								  },
+								  axisLabel: {
+								  	style: {
+								  		fill: '#fff',
+								  		fontSize: 10,
+								  		rotate: 0
+								  	}
+								  },
+								  axisLine: {
+								  	style: {
+								  		stroke: '#fff',
+								  		lineWidth: 1
+								  	}
+								  },
+								  nameTextStyle: {
+								  	fill: '#67e0e3',
+								  	fontSize: 14
+								  },
+								name: '金额（万元）',
+								data: 'value'
+							  },
+							  series: [
+								{
+								  name: '融资金额',
+								  data: [180, 223, 240, 210, 214, 200, 185],
+								  type: 'line',
+								  label: {
+									  show: true,
+									  formatter: '{value}'
+									},
+								  stack: 'a',
+								  fill: {
+									show: true
+								  }
+								},
+								{
+								  name: '还款金额',
+								  data: [180, 223, 240, 210, 214, 200, 185],
+								  type: 'line',
+								  label: {
+									  show: true,
+									  formatter: '{value}'
+									},
+								  stack: 'a',
+								  smooth: true
+								}
+							  ],
+							  color: ['#ff9f7f', '#67e0e3', '#9fe6b8', '#ffdb5c', '#ff9f7f', '#96bfff', '#a02200', '#5d1400', '#b72700']
+							},
+						storageList: [{
+								data: [30,20],
+								shape: 'round',
+								waveHeight:'3',
+								waveNum:'6'
+							},
+							{
+								data: [55,45],
+								shape: 'round',
+								waveHeight:'3',
+								waveNum:'6'
+							},
+							{
+								data: [20,10],
+								shape: 'round',
+								waveHeight:'3',
+								waveNum:'6'
+							},
+							{
+								data: [0,0],
+								shape: 'round',
+								waveHeight:'3',
+								waveNum:'6'
+							},
+							{
+								data: [100],
+								shape: 'round',
+								waveHeight:'3',
+								waveNum:'6'
+							}
+						],
+						jiekuanrList: {
+							rowNum: 7,
+							unit:'元',
+							data: [{
+									name: '山东子文供应链管理有限公司',
+									value: 11291233
+								},{
+									name: '山东子文供应链管理有限公司',
+									value: 11241233
+								},{
+									name: '山东子文供应链管理有限公司',
+									value: 10241233
+								},{
+									name: '山东子文供应链管理有限公司',
+									value: 11641233
+								}
+							],
+							valueFormatter ({ value }) {
+							    console.warn(arguments)
+							    const reverseNumber = (value + '').split('').reverse()
+							    let valueStr = ''
+							
+							    while (reverseNumber.length) {
+							      const seg = reverseNumber.splice(0, 3).join('')
+							      valueStr += seg
+							      if (seg.length === 3) valueStr += ','
+							    }
+								
+								if(valueStr.lastIndexOf(',') == valueStr.length-1)
+									valueStr=valueStr.substr(0,valueStr.length-1)
+							    return valueStr.split('').reverse().join('')+'元'
+							  }
+						},
+						productList: {
+							series: [{
+								type: 'pie',
+								radius: '50%',
+								roseSort: false,
+								data: [{
+										name: '牛前腿',
+										value: 50
+									},
+									{
+										name: '牛后腿',
+										value: 43
+									},
+									{
+										name: '牛肉',
+										value: 78
+									},
+									{
+										name: '猪头',
+										value: 56
+									},
+									{
+										name: '猪后腿',
+										value: 70
+									},
+									{
+										name: '羊六分体',
+										value: 40
+									},
+									{
+										name: '羊头',
+										value: 12
+									},
+									{
+										name: '猪大肠',
+										value: 16
+									}
+								],
+								insideLabel: {
+									show: false
+								},
+								outsideLabel: {
+									formatter: '{name} {percent}%',
+									labelLineEndLength: 20,
+									style: {
+										fill: '#fff'
+									},
+									labelLineStyle: {
+										stroke: '#fff'
+									}
+								},
+								roseType: true
+							}],
+							color: ['#ff9f7f', '#fa3600', '#ff4411', '#ff724c', '#ff9f7f', '#801b00', '#a02200', '#5d1400', '#b72700']
+						},
+						gangkoutList: {
+							series: [{
+								type: 'pie',
+								radius: '50%',
+								roseSort: false,
+								data: [{
+										name: '天津港',
+										value: 50
+									},
+									{
+										name: '大连港',
+										value: 43
+									},
+									{
+										name: '上海港',
+										value: 78
+									},
+									{
+										name: '深圳港',
+										value: 56
+									},
+									{
+										name: '广州港',
+										value: 70
+									},
+									{
+										name: '青岛港',
+										value: 40
+									},
+									{
+										name: '宁波港',
+										value: 30
+									}
+								],
+								insideLabel: {
+									show: false
+								},
+								outsideLabel: {
+									formatter: '{name} {percent}%',
+									labelLineEndLength: 20,
+									style: {
+										fill: '#fff'
+									},
+									labelLineStyle: {
+										stroke: '#fff'
+									}
+								},
+								roseType: true
+							}],
+							color: ['#ff9f7f', '#fa3600', '#ff4411', '#ff724c', '#ff9f7f', '#801b00', '#a02200', '#5d1400', '#b72700']
+						},
+						staticList: {
+							color: ['#67e0e3', '#fa3600'],
+							title: {
+								text: ''
+							},
+							legend: {
+							    data: ['入库', '出库'],
+								textStyle: {
+								  fontSize: 13,
+								  fill: '#fff'
+								}
+							},	
+							xAxis: {
+								axisLabel: {
+									style: {
+										fill: '#fff',
+										fontSize: 10,
+										rotate: 0
+									}
+								},
+								axisLine: {
+									style: {
+										stroke: '#fff',
+										lineWidth: 1
+									}
+								},
+								nameTextStyle: {
+									fill: '#67e0e3',
+									fontSize: 14
+								},
+
+								name: '',
+								data: ['2020-01-13', '2020-01-14', '2020-01-15', '2020-01-16', '2020-01-17', '2020-01-18', '2020-01-19']
+							},
+							series: [{
+									data: [200, 100, 100, 100, 100, 100, 100],
+									type: 'bar',
+									name: '入库'
+								},
+								{
+									data: [150, 200, 100, 20, 30, 40, 90],
+									type: 'bar',
+									name: '出库'
+								}
+							]
+						}
+					}
+				},
+				created:function(){
+					this.currentTime()
+				},
+				methods:{
+					getTime: function() {
+						var _this = this;
+						let yy = new Date().getFullYear();
+						let mm = new Date().getMonth() + 1;
+						let dd = new Date().getDate();
+						let hh = new Date().getHours();
+						let mf = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
+						let ss = new Date().getSeconds() < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
+						_this.gettime = yy + '年' + mm + '月' + dd + '日 ' + hh + ':' + mf + ':' + ss;
+					},
+					currentTime() {
+						setInterval(this.getTime, 500)
+					},
+				}
+			})
+		</script>
+	</body>
+</html>
+
+<style type="text/css">
+	[v-cloak] {
+		display: none !important;
+	}
+
+	.dv-charts-container {
+		height: calc(~"100% - 50px");
+	}
+
+	.ranking-board {
+		-webkit-box-shadow: 0 0 3px #00f;
+		box-shadow: 0 0 3px #00f;
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		-ms-flex-direction: column;
+		flex-direction: column;
+		background-color: rgba(6, 30, 93, .5);
+		border-top: 2px solid rgba(1, 153, 209, .5);
+		padding: 0 10px;
+	}
+
+	.card-body {
+		min-height: 150px;
+		margin-left: 5px;
+		margin-right: 5px;
+		text-align: center
+	}
+
+	.padding-lr {
+		padding-left: 15px;
+		padding-right: 15px
+	}
+
+	.margin-lr {
+		margin-left: 5px;
+		margin-right: 5px
+	}
+
+	.card-title {
+		padding: 30px 0 10px 0;
+		text-align: center;
+		color: #fff;
+		font-size: 18px;
+		font-weight: 600;
+	}
+
+	.card-title2 {
+		padding: 10px 0 10px 0;
+		text-align: center;
+		color: #fff;
+		font-size: 20px;
+		font-weight: 600;
+	}
+
+	.card-content {
+		padding: 20px 0 10px 0;
+		text-align: center;
+	}
+
+	.card-content2 {
+		padding: 5px 0 5px 0;
+		text-align: center;
+	}
+
+	.card-tag {
+		padding: 0 5px 0 5px;
+		color: #fff;
+		font-size: 18px;
+		font-weight: 500;
+	}
+
+	.card-number {
+		padding: 0 5px 0 5px;
+
+		font-size: 28px;
+		font-weight: 600;
+	}
+
+	.card-number2 {
+		padding: 0 5px 0 5px;
+
+		font-size: 20px;
+		font-weight: 600;
+	}
+
+	.text-green {
+		color: #33CC33
+	}
+
+	.text-blue {
+		color: #66CCFF;
+	}
+
+	.card-line {
+		padding: 0;
+		color: #C0C4CC;
+		font-size: 30px;
+	}
+
+	.dv-water-pond-level canvas {
+		margin-left: 0px;
+	}
+
+	html,
+	body,
+	#app {
+		width: 100%;
+		height: 100%;
+		margin: 0px;
+		padding: 0px;
+		background-color: #070A17
+	}
+
+	.border-box-content {
+		color: rgb(66, 185, 131);
+		min-height: 300px;
+		font-size: 40px;
+		background-color: rgba(255, 255, 255, 0.1);
+		font-weight: bold;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.dv-scroll-board .rows .row-item {
+		display: flex;
+		font-size: 12px;
+		transition: all 0.3s;
+	}
+
+	.el-input__inner {
+		background-color: #09071d4d;
+		box-shadow: #3585c7 0px 0px 18px inset;
+		border: 1px solid #2b67ee;
+		color: #fff;
+	}
+
+	.el-input__inner:hover {
+		border-color: #2b67ee;
+	}
+
+	.el-select .el-input__inner:focus {
+		border-color: #2b67ee;
+	}
+
+	.el-select .el-input.is-focus .el-input__inner {
+		border-color: #2b67ee;
+	}
+
+	.el-select-dropdown__item.selected {
+		color: #1370fb;
+		font-weight: 700;
+	}
+
+	.el-select-dropdown {
+		border: 1px solid #061d40;
+		border-radius: 4px;
+		background-color: #061d40;
+	}
+
+	.el-select-dropdown__item.hover,
+	.el-select-dropdown__item:hover {
+		background-color: #194280;
+	}
+
+	.el-select-dropdown__item {
+		color: #fff;
+	}
+
+	.el-popper[x-placement^=bottom] .popper__arrow {
+		border-bottom-color: #061d40;
+	}
+
+	.el-popper[x-placement^=bottom] .popper__arrow::after {
+		border-bottom-color: #061d40;
+	}
+</style>

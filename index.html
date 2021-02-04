@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>东方神鹰冷库作业监控中心</title>
-
+		<title>DataV</title>
+		<script src="https://unpkg.com/vue"></script>
 		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 		<!-- 引入组件库 -->
-		<script src="https://unpkg.com/vue"></script>
 		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
 		<!--调试版-->
 		<script src="https://unpkg.com/@jiaminghi/data-view/dist/datav.map.vue.js"></script>
@@ -14,23 +13,18 @@
 
 	</head>
 	<body>
-		<div id="app" style="background-color: #070A17" v-cloak>
+		<div id="app">
 			<dv-full-screen-container>
 				<el-row type="flex" justify="center" style="padding:10px 0">
-					<el-col :span="4">
+					<el-col :span="8">
 						<dv-decoration-8 style="width:300px;height:50px;" />
 					</el-col>
-					<el-col :span="4" style="text-align: center;">
-						<span style="color: aqua;font-size: 20px;line-height: 60px;font-weight: 600;">{{gettime}}</span>
+
+					<el-col :span="8">
+						<div style="color:#FFFFFF;font-size:30px;font-weight:600;text-align:center">{{companyName}}</div>
+						<dv-decoration-5 style="width:300px;height:40px;margin:0 auto" />
 					</el-col>
 					<el-col :span="8">
-						<div style="color:#FFFFFF;font-size:30px;font-weight:600;text-align:center">东方神鹰<span style="font-size: 16px;vertical-align: top;color:darkorange">®</span>{{systemName}}</div>
-						<dv-decoration-5 dur='5' style="width:300px;height:40px;margin:0 auto" />
-					</el-col>
-					<el-col :span="4" style="text-align: center;">
-						<span style="color: aqua;font-size: 20px;line-height: 60px;font-weight: 600;">{{companyName}}</span>
-					</el-col>
-					<el-col :span="4">
 						<dv-decoration-8 :reverse="true" style="width:300px;height:50px;margin-left:auto" />
 					</el-col>
 				</el-row>
@@ -63,12 +57,12 @@
 							</div>
 							<div class="card-content2">
 								<span class="card-tag">平均等待时间</span>
-								<span class="card-number2 text-green">01:20</span>
+								<span class="card-number text-green">01:20</span>
 
 							</div>
 							<div class="card-content2">
 								<span class="card-tag">平均工作时间</span>
-								<span class="card-number2 text-blue">01:20</span>
+								<span class="card-number text-blue">01:20</span>
 							</div>
 						</div>
 					</el-col>
@@ -79,7 +73,7 @@
 					<el-col :span="5" class="">
 						<div class="margin-lr ranking-board">
 							<div class="card-title">
-								<dv-decoration-7 style="width:180px;height:30px;margin:0 auto"><span class="padding-lr">客户库存</span></dv-decoration-7>
+								<dv-decoration-7 style="width:180px;height:30px;margin:0 auto"><span class="padding-lr">客户库存量</span></dv-decoration-7>
 							</div>
 							<dv-scroll-ranking-board :config="customerList" style="height:603px" />
 						</div>
@@ -87,31 +81,22 @@
 					<el-col :span="19">
 
 						<el-row>
-							<el-col :span="4">
+							<el-col :span="16">
 								<div class="margin-lr ranking-board" style="height:350px">
 									<div class="card-title">
 										<dv-decoration-7 style="width:180px;height:30px;margin:0 auto"><span class="padding-lr">当前库存</span></dv-decoration-7>
 									</div>
+									<el-row type="flex" style="padding:5px 0" justify="center">
+										<el-col :span="parseInt(24/storageList.length)" v-for="(item,index) in storageList">
+											<div class="card-title2">
+												{{index==0?'总库存':index+'号库'}}
+											</div>
+											<div class="card-content">
+												<dv-water-level-pond :config="storageList[index]" style="width:150px;width:150px;height:150px;margin:0 auto" />
+											</div>
 
-									<div class="card-content">
-										<dv-water-level-pond :config="storageList[0]" style="width:150px;height:150px;margin:0 auto" />
-									</div>
-									<div class="card-title2 text-blue">
-										10003吨
-									</div>
-								</div>
-
-							</el-col>
-							<el-col :span="12">
-								<div class="margin-lr ranking-board" style="height:350px">
-									<div class="card-title">
-										<dv-decoration-7 style="width:180px;height:30px;margin:0 auto"><span class="padding-lr">库存变动</span></dv-decoration-7>
-									</div>
-
-									<div class="card-content">
-										<dv-charts :option="storagechangeList" style="width:100%;height:260px;margin:0 auto"></dv-charts>
-									</div>
-
+										</el-col>
+									</el-row>
 								</div>
 
 							</el-col>
@@ -126,11 +111,11 @@
 						</el-row>
 						<el-row style="padding:20px 0">
 							<el-col :span="10">
-								<div class="margin-lr ranking-board" style="height:300px;padding-right: 10px;">
+								<div class="margin-lr ranking-board" style="height:300px">
 									<div class="card-title">
 										<dv-decoration-7 style="width:180px;height:30px;margin:0 auto"><span class="padding-lr">7天出入库</span></dv-decoration-7>
 									</div>
-									<dv-charts :option="staticList" style="width:100%;height:230px;margin:0 auto"></dv-charts>
+									<dv-charts :option="staticList" style="width:100%;height:250px;margin:0 auto"></dv-charts>
 								</div>
 							</el-col>
 
@@ -168,8 +153,7 @@
 					return {
 						gettime: '',
 						companyName: "青岛汇通丰源供应链管理有限公司",
-						systemName: "冷库作业监控中心",
-						areaList: ["入库", "出库", "核酸", "消毒", "倒柜", "货转"],
+						areaList: ["入库单", "出库单", "核酸单", "消毒单", "倒柜单", "货转单"],
 						workList: {
 							header: ['月台', '车辆', '柜号', '类型'],
 							data: [
@@ -206,130 +190,25 @@
 							columnWidth: [200, 100, 60, 150],
 							align: ['center']
 						},
-						storagechangeList:{
-							  title: {
-								text: ''
-							  },
-							  legend: {
-								data: ['A库', 'B库', 'C库'],
-								textStyle: {
-								  fontSize: 13,
-								  fill: '#fff'
-								}
-							  },
-							  xAxis: {
-								  axisLabel: {
-								  	style: {
-								  		fill: '#fff',
-								  		fontSize: 10,
-								  		rotate: 0
-								  	}
-								  },
-								  axisLine: {
-								  	style: {
-								  		stroke: '#fff',
-								  		lineWidth: 1
-								  	}
-								  },
-								  nameTextStyle: {
-								  	fill: '#67e0e3',
-								  	fontSize: 14
-								  },
-								name: '',
-								data: ['2020-12-06', '2020-12-13', '2020-12-20', '2020-12-27', '2021-01-03', '2021-01-10', '2021-01-17']
-							  },
-							  yAxis: {
-								  splitLine: {
-									show: false
-								  },
-								  axisLabel: {
-								  	style: {
-								  		fill: '#fff',
-								  		fontSize: 10,
-								  		rotate: 0
-								  	}
-								  },
-								  axisLine: {
-								  	style: {
-								  		stroke: '#fff',
-								  		lineWidth: 1
-								  	}
-								  },
-								  nameTextStyle: {
-								  	fill: '#67e0e3',
-								  	fontSize: 14
-								  },
-								name: '库存量',
-								data: 'value'
-							  },
-							  series: [
-								{
-								  name: 'A库',
-								  data: [1200, 2230, 1900, 2100, 3500, 4200, 3985],
-								  type: 'line',
-								  label: {
-									  show: true,
-									  formatter: '{value} 吨'
-									},
-								  stack: 'a',
-								  fill: {
-									show: true
-								  }
-								},
-								{
-								  name: 'B库',
-								  data: [1200, 2230, 1900, 2100, 3500, 4200, 3985],
-								  type: 'line',
-								  label: {
-									  show: true,
-									  formatter: '{value} 吨'
-									},
-								  stack: 'a',
-								  smooth: true
-								},
-								{
-								  name: 'C库',
-								  data: [1200, 2230, 1900, 2100, 3500, 4200, 3985],
-								  type: 'line',
-								  label: {
-									show: true,
-									formatter: '{value} 吨'
-								  },
-								  stack: 'a',
-								  smooth: true
-								}
-							  ],
-							  color: ['#ff9f7f', '#67e0e3', '#9fe6b8', '#ffdb5c', '#ff9f7f', '#96bfff', '#a02200', '#5d1400', '#b72700']
-							},
 						storageList: [{
-								data: [30,20],
-								shape: 'round',
-								waveHeight:'3',
-								waveNum:'6'
+								data: [30],
+								shape: 'round'
 							},
 							{
-								data: [55,45],
-								shape: 'round',
-								waveHeight:'3',
-								waveNum:'6'
+								data: [55],
+								shape: 'round'
 							},
 							{
-								data: [20,10],
-								shape: 'round',
-								waveHeight:'3',
-								waveNum:'6'
+								data: [20],
+								shape: 'round'
 							},
 							{
-								data: [0,0],
-								shape: 'round',
-								waveHeight:'3',
-								waveNum:'6'
+								data: [0],
+								shape: 'round'
 							},
 							{
-								data: [100],
-								shape: 'round',
-								waveHeight:'3',
-								waveNum:'6'
+								data: [12],
+								shape: 'round'
 							}
 						],
 						customerList: {
@@ -464,13 +343,7 @@
 							title: {
 								text: ''
 							},
-							legend: {
-							    data: ['入库', '出库'],
-								textStyle: {
-								  fontSize: 13,
-								  fill: '#fff'
-								}
-							},	
+
 							xAxis: {
 								axisLabel: {
 									style: {
@@ -490,7 +363,7 @@
 									fontSize: 14
 								},
 
-								name: '',
+								name: '日期',
 								data: ['2020-01-13', '2020-01-14', '2020-01-15', '2020-01-16', '2020-01-17', '2020-01-18', '2020-01-19']
 							},
 
@@ -512,27 +385,26 @@
 									fill: '#67e0e3',
 									fontSize: 14
 								},
-								name: '重量(吨)',
+								name: '柜量',
 								data: 'value'
 							},
 							series: [{
 									data: [200, 100, 100, 100, 100, 100, 100],
-									type: 'bar',
-									name: '入库'
+									type: 'bar'
 								},
 								{
 									data: [150, 200, 100, 20, 30, 40, 90],
-									type: 'bar',
-									name: '出库'
+									type: 'bar'
 								}
 							]
 						}
 					}
 				},
-				created:function(){
-					this.currentTime()
+				created: {
+
+
 				},
-				methods:{
+				method: {
 					getTime: function() {
 						var _this = this;
 						let yy = new Date().getFullYear();
@@ -541,7 +413,7 @@
 						let hh = new Date().getHours();
 						let mf = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
 						let ss = new Date().getSeconds() < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
-						_this.gettime = yy + '年' + mm + '月' + dd + '日 ' + hh + ':' + mf + ':' + ss;
+						_this.gettime = yy + '-' + mm + '-' + dd + ' ' + hh + ':' + mf + ':' + ss;
 					},
 					currentTime() {
 						setInterval(this.getTime, 500)
@@ -553,11 +425,7 @@
 	</body>
 </html>
 
-<style type="text/css">
-	[v-cloak] {
-		display: none !important;
-	}
-
+<style>
 	.dv-charts-container {
 		height: calc(~"100% - 50px");
 	}
@@ -595,7 +463,7 @@
 		padding: 30px 0 10px 0;
 		text-align: center;
 		color: #fff;
-		font-size: 22px;
+		font-size: 20px;
 		font-weight: 600;
 	}
 
@@ -627,13 +495,6 @@
 	.card-number {
 		padding: 0 5px 0 5px;
 
-		font-size: 28px;
-		font-weight: 600;
-	}
-
-	.card-number2 {
-		padding: 0 5px 0 5px;
-
 		font-size: 20px;
 		font-weight: 600;
 	}
@@ -650,10 +511,6 @@
 		padding: 0;
 		color: #C0C4CC;
 		font-size: 30px;
-	}
-
-	.dv-water-pond-level canvas {
-		margin-left: 0px;
 	}
 
 	html,
