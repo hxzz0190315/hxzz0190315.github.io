@@ -22,7 +22,6 @@
 					<el-col :span="4" style="text-align: center;">
 						<img src="img/qqyouxianlogo.png" style="width: 110px; margin-top: 10px;">
 					</el-col>
-
 					<el-col :span="8">
 						<div style="color:#FFFFFF;font-size:30px;font-weight:600;text-align:center">{{systemName}}</div>
 						<!-- <dv-decoration-5 :dur='5' style="width:300px;height:40px;margin:0 auto" /> -->
@@ -58,15 +57,14 @@
 					<el-col :span="9" class="">
 						<div class="margin-lr ranking-board" style="height:350px;padding-right: 10px;">
 							<div class="card-title">
-								<span class="padding-lr">{{changeTitleList[currentChangeTitleIndex]}}</span>
+								<span class="padding-lr">今日业务状态</span>
 							</div>
-							<el-carousel indicator-position="outside" @change="changeTitleByCurrentIndex" style="padding-top: 20px;"
+							<el-carousel indicator-position="outside" @change="changeTitleByCurrentIndex" style="padding-top: 30px;"
 							 :interval="10000">
-								<el-carousel-item>
-
+								<el-carousel-item :label="'融资申请'">
 									<dv-scroll-board :config="rongziList" style="width:100%;height:240px; text-align: center;" />
 								</el-carousel-item>
-								<el-carousel-item>
+								<el-carousel-item :label="'今日还款'">
 									<dv-scroll-board :config="repayList" style="width:100%;height:240px;text-align: center; " />
 								</el-carousel-item>
 							</el-carousel>
@@ -82,13 +80,11 @@
 								<dv-flyline-chart-enhanced :config="wareHouseInfo" style="width:450px;height:450px;margin:0 auto;margin-top:-70px;margin-left: 30px;" />
 							</div>
 							<!-- <p style="width:130px;position: absolute; bottom: 160px;right:0px;z-index: 9999; font-size: 14px; text-align: center; color: #fff;">占用冷库数目</p> -->
-							<dv-scroll-ranking-board :config="gangkouList" class="mini-font" style="transform: scale(0.90, 0.90);width:220px; height:180px;position: absolute; bottom: 0px;right:10px;z-index: 9999; font-size: 12px;" />
+							<dv-scroll-ranking-board :config="gangkouList" class="mini-font" style="transform: scale(0.90, 0.90);width:33%; height:180px;position: absolute; bottom: 0px;right:10px;z-index: 9999; font-size: 12px;" />
 						</div>
-
 					</el-col>
 					<el-col :span="6">
 						<div class="margin-lr ranking-board" style="height:350px">
-
 							<div class="card-title">
 								<span class="padding-lr">货物入库情况</span>
 							</div>
@@ -112,11 +108,10 @@
 									<div class="card-title">
 										<span class="padding-lr">借款人排行</span>
 									</div>
-									<dv-scroll-ranking-board :config="jiekuanrList" style="height:280px" />
+									<dv-scroll-board :config="jiekuanrList" style="width:100%;height:220px" />
 								</div>
 							</el-col>
 						</el-row>
-
 					</el-col>
 					<el-col :span="9">
 						<div class="margin-lr ranking-board" style="height:350px">
@@ -132,21 +127,12 @@
 								<span class="padding-lr">主要抵押物</span>
 							</div>
 							<div id="container1" ref="container1" style="width:94%;height:220px"></div>
-							
-							<!---dv-charts :option="gangkoutList" style="width:90%;height:280px;margin:0 auto;margin-top:-30px"></dv-charts --->
 						</div>
 					</el-col>
 				</el-row>
 			</dv-full-screen-container>
-
 		</div>
-
-
-
 		<script>
-
-			
-
 			var app = new Vue({
 				el: '#app',
 				data: function() {
@@ -209,9 +195,7 @@
 									{n:"管控总额度",v:"50,000",u:"万元",c:"text-blue"},
 									{n:"已占用额度",v:"20,000",u:"万元",c:"text-blue"},
 									{n:"剩余总额度",v:"30000",u:"万元",c:"text-blue"},
-									{n:"平均占用天数",v:"30",u:"",c:"text-blue"} ],
-						
-						
+									{n:"平均占用天数",v:"30",u:"",c:"text-blue"}],
 						rongziList: {
 							header: ['核心企业', '融资单号','借款人', '合同金额','融资金额'],
 							data: [
@@ -255,102 +239,84 @@
 						currentChangeTitleIndex : 0,
 						changeTitleList:['融资申请','今日还款'],
 						wareHouseInfo:{
-										 points: [
-											{
-											  name: '青岛',
-											  coordinate: [0.813, 0.356],
-												  halo: {
-													show: true,
-													color: '#8378ea',
-													 duration:[30,30],
-													radius:38,
-												  }
-											},
-											{
-											  name: '天津',
-											  coordinate: [0.753, 0.312],
-												 halo: {
-												 		show: true,
-												 		color: '#8378ea',
-												 		duration:[30,30],
-												 		radius:38,
-												 }
-											},
-											{
-											  name: '大连',
-											  coordinate: [0.822, 0.302],
-												 halo: {
-												 		show: true,
-												 		color: '#8378ea',
-												 		duration:[30,30],
-												 		radius:38,
-												 }
-											},
-											{
-											  name: '上海',
-											  coordinate: [0.854, 0.461],
-												 halo: {
-												 		show: true,
-												 		color: '#8378ea',
-												 		duration:[30,30],
-												 		radius:38,
-												 }
-											},
-											{
-											  name: '盐田',
-											  coordinate: [0.717, 0.653],
-												 halo: {
-												 		show: true,
-												 		color: '#f395ff',
-												 		duration:[30,30],
-												 		radius:38,
-												 }
-											},
-											
-										  ],
-										  lines: [
-											{
-											  source: '天津',
-											  target: '青岛',
-											  duration:[30,30]
-											},
-											{
-											  source: '大连',
-											  target: '青岛',
-											  duration:[30,30]
-											},
-											{
-											  source: '上海',
-											  target: '青岛',
-											  duration:[30,30]
-											},
-											{
-											  source: '盐田',
-											  target: '青岛',
-											  duration:[30,30]
-											}
-											
-										  ],
-										  icon: {
+							 points: [{
+								  name: '青岛',
+								  coordinate: [0.813, 0.356],
+									  halo: {
+										show: true,
+										color: '#8378ea',
+										 duration:[30,30],
+										radius:38,
+									  }
+								},{
+								  name: '天津',
+								  coordinate: [0.753, 0.312],
+									 halo: {
 											show: true,
-											src: 'img/mapPoint.png'
-										  },
-										  k:2,
-										  text: {
-										      show: true,
-										    }
-											,
-											
-											
-										  bgImgSrc: 'img/ditu.png'
-										},
-						
-						
+											color: '#8378ea',
+											duration:[30,30],
+											radius:38,
+									 }
+								},{
+								  name: '大连',
+								  coordinate: [0.822, 0.302],
+									 halo: {
+											show: true,
+											color: '#8378ea',
+											duration:[30,30],
+											radius:38,
+									 }
+								},{
+								  name: '上海',
+								  coordinate: [0.854, 0.461],
+									 halo: {
+											show: true,
+											color: '#8378ea',
+											duration:[30,30],
+											radius:38,
+									 }
+								},{
+								  name: '盐田',
+								  coordinate: [0.717, 0.653],
+									 halo: {
+											show: true,
+											color: '#f395ff',
+											duration:[30,30],
+											radius:38,
+									 }
+								}],
+							  lines: [{
+								  source: '天津',
+								  target: '青岛',
+								  duration:[30,30]
+								},{
+								  source: '大连',
+								  target: '青岛',
+								  duration:[30,30]
+								},{
+								  source: '上海',
+								  target: '青岛',
+								  duration:[30,30]
+								},{
+								  source: '盐田',
+								  target: '青岛',
+								  duration:[30,30]
+								}],
+							  icon: {
+								show: true,
+								src: 'img/mapPoint.png',
+								},
+							  k:2,
+							  text: {
+								  show: true,
+								},
+							  bgImgSrc: 'img/ditu.png'
+							},
 						customerList: {
 							rowNum: 7,
 							unit:'元',
 							data: [{
-									name: '青岛品物科技有限公司',
+									name: '<a href="">青岛品物科技有限公司</a>',
 									value: 824123343
 								},{
 									name: '青岛品物科技有限公司',
@@ -363,40 +329,6 @@
 									value: 1124123343
 								}
 							],
-							valueFormatter ({ value }) {
-							    console.warn(arguments)
-							    const reverseNumber = (value + '').split('').reverse()
-							    let valueStr = ''
-							
-							    while (reverseNumber.length) {
-							      const seg = reverseNumber.splice(0, 3).join('')
-							      valueStr += seg
-							      if (seg.length === 3) valueStr += ','
-							    }
-								
-								if(valueStr.lastIndexOf(',') == valueStr.length-1)
-									valueStr=valueStr.substr(0,valueStr.length-1)
-							    return valueStr.split('').reverse().join('')+'元'
-							  }
-						},
-						jiekuanrList: {
-							rowNum: 7,
-							unit:'元',
-							data: [{
-									name: '山东子文供应链管理有限公司',
-									value: 11291233
-								},{
-									name: '山东子文供应链管理有限公司',
-									value: 11241233
-								},{
-									name: '山东子文供应链管理有限公司',
-									value: 10241233
-								},{
-									name: '山东子文供应链管理有限公司',
-									value: 11641233
-								}
-							],
-							
 							valueFormatter ({ value }) {
 							    console.warn(arguments)
 							    const reverseNumber = (value + '').split('').reverse()
@@ -433,8 +365,6 @@
 									value: 31.25
 								}
 							]},
-						
-						
 						productReceiveSeries :{ 
 							color: ['#67e0e3', '#ff724c'],
 							  legend: {
@@ -516,7 +446,29 @@
 								}
 							  ]
 							},
-						
+						jiekuanrList:{
+							  header: ['借款人','欠款金额', '货值'],
+							  data: [
+								['青岛1245有限公司', '出库异常','已消警'],
+								['青岛1245有限公司', '出库异常', ''],
+								['青岛1245有限公司', '出库异常',''],
+								['青岛1245有限公司', '出库异常', '已消警'],
+								['青岛1245有限公司', '出库异常',''],
+								['青岛1245有限公司', '出库异常',''],
+								['青岛1245有限公司', '出库异常',''],
+								['青岛1245有限公司', '出库异常',''],
+								['', '', ''],
+								['', '', '']],
+							  index: true,
+							  columnWidth: [50],
+							  indexHeader:'',
+							  align: ['center','center','center','left'],
+							  headerBGC:'#0088ff44',
+							  oddRowBGC:'#0000ff11',
+							  evenRowBGC:'#004cff22',
+							  carousel:'page',
+							  waitTime:4000
+							},
 						warningInfo:{
 							  header: ['合同号','类型', '','状态', '处理'],
 							  data: [
@@ -547,14 +499,8 @@
 				},
 				created:function(){
 					this.currentTime()
-					
 				},
 				mounted:function(){
-					
-					
-					
-					
-					
 				},
 				updated:function(){
 					var _this = this
@@ -565,7 +511,6 @@
 						_this.wc.setOption(_this.wordCloud)
 						this.flag = true
 					}
-					
 				},
 				methods:{
 					 handleClick(tab, event) {
@@ -589,18 +534,6 @@
 						},
 				}
 			}) ;
-			
-			
-			
-			
-			
-			  
-			  
-			  
-			 
-			  
-			 
-			
 		</script>
 	</body>
 </html>
@@ -783,9 +716,38 @@
 		position: absolute;
 		-webkit-transform: none;
 		transform: none;
+		width: 94%;
+	}
+
+	.el-carousel__indicators--outside button {
+		background-color: #ffffff00;
+		opacity: .40;
+	}
+
+	.el-carousel__indicators--outside button span {
+		border-bottom: 3px solid #fff;
+		padding-bottom: 6px;
+		opacity: 1;
+		font-size: 14px;
+		font-weight: 600;
+		color: #fff;
+
+	}
+
+	.el-carousel__indicator:hover button {
+		opacity: 1;
+	}
+
+	.el-carousel__indicators--outside .el-carousel__indicator:hover button {
+		opacity: 1;
 	}
 
 	.mini-font .dv-scroll-ranking-board .ranking-info {
 		font-size: 12px;
+	}
+
+	.info-name a {
+		color: #fff;
+		text-decoration: none;
 	}
 </style>

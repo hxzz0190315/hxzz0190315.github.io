@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>中国工商银行供应链金融监控中心</title>
+
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<!-- 引入组件库 -->
+		<script src="https://unpkg.com/vue"></script>
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+		<script src="js/js2wordcloud.min.js"></script>
+		<!--调试版-->
+		<script src="https://unpkg.com/@jiaminghi/data-view/dist/datav.map.vue.js"></script>
+
+	</head>
+	<body>
+		<div id="app" style="background-color: #070A17" v-cloak>
+			<dv-full-screen-container class="container-bg">
+				<el-row type="flex" justify="center" style="padding:10px 0">
+					<el-col :span="4">
+						<dv-decoration-8 style="width:300px;height:50px;" />
+					</el-col>
+					<el-col :span="4" style="text-align: center;">
+						<img src="img/qqyouxianlogo.png" style="width: 110px; margin-top: 10px;">
+					</el-col>
+
+					<el-col :span="8">
+						<div style="color:#FFFFFF;font-size:30px;font-weight:600;text-align:center">{{systemName}}</div>
+						<!-- <dv-decoration-5 :dur='5' style="width:300px;height:40px;margin:0 auto" /> -->
+					</el-col>
+					<el-col :span="4" style="text-align: center;">
+						<span style="color: aqua;font-size: 16px;line-height: 60px;">{{gettime}}</span>
+					</el-col>
+					<el-col :span="4">
+						<dv-decoration-8 :reverse="true" style="width:300px;height:50px;margin-left:auto" />
+					</el-col>
+				</el-row>
+				<div class="" style="padding-left: 20px; padding-right: 20px;">
+					<el-row :gutter="20" class="margin-top">
+						<el-col :span="9" class="">
+							<div class="margin-lr ranking-board" style="height:960px;padding-right: 10px;">
+								<div class="card-title">
+									<span class="padding-lr">借款人排行</span>
+								</div>
+								<el-table ref="singleTable" :data="tableData" height="870" style="margin-top: 10px;" :stripe="true"
+								 highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+									<el-table-column type="index" width="50">
+									</el-table-column>
+									<el-table-column property="name" label="借款人" width="200">
+									</el-table-column>
+									<el-table-column property="rongzi" label="融资笔数" width="80">
+									</el-table-column>
+									<el-table-column property="qiankuan" label="欠款金额" width="120">
+									</el-table-column>
+									<el-table-column property="huozhi" label="货值">
+									</el-table-column>
+								</el-table>
+							</div>
+						</el-col>
+						<el-col :span="15" class="">
+							<el-row :gutter="12">
+								<el-col :span="4" v-for="(item,index) in areaList" style="margin-bottom: 10px;">
+									<div class="card-body ranking-board">
+										<div class="card-title">
+											<span class="padding-lr">{{item.n}}</span>
+										</div>
+										<div class="card-content">
+											<span class="card-tag"></span>
+											<span class="card-number " :class="item.c">{{item.v}}<span style="font-size: 16px; color: #fff; padding-left:6px;">{{item.u}}</span></span>
+										</div>
+									</div>
+								</el-col>
+							</el-row>
+							<el-row :gutter="12" style="margin-top: 10px;">
+								<el-col :span="12" style="margin-bottom: 10px;">
+									<div class="card-body ranking-board" style="height: 440px;">
+										<div class="card-title">
+											<span class="padding-lr">历史融资申请</span>
+										</div>
+										<dv-scroll-board :config="rongziList" style="width:100%;height:350px;margin-top: 10px;" />
+									</div>
+								</el-col>
+								<el-col :span="12" style="margin-bottom: 10px;">
+									<div class="card-body ranking-board" style="height: 440px;">
+										<div class="card-title">
+											<span class="padding-lr">历史还款情况</span>
+										</div>
+										<dv-scroll-board :config="huankuanList" style="width:100%;height:350px;margin-top: 10px;" />
+									</div>
+								</el-col>
+							</el-row>
+							<el-row :gutter="12" style="margin-top: 10px;">
+								<el-col :span="12" style="margin-bottom: 10px;">
+									<div class="card-body ranking-board" style="height: 363px;">
+										<div class="card-title">
+											<span class="padding-lr">主要抵押物</span>
+										</div>
+										<div id="container1" ref="container1" style="width:96%;height:270px;margin: 10px auto 0;"></div>
+									</div>
+								</el-col>
+								<el-col :span="12" style="margin-bottom: 10px;">
+									<div class="card-body ranking-board" style="height: 363px;">
+										<div class="card-title">
+											<span class="padding-lr">还款预警</span>
+										</div>
+										<dv-scroll-board :config="yvjingList" style="width:100%;height:270px;margin-top: 10px;" />
+									</div>
+								</el-col>
+							</el-row>
+						</el-col>
+					</el-row>
+				</div>
+			</dv-full-screen-container>
+		</div>
+		<script>
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+						systemName: "中国工商银行供应链金融监控中心",
+						gettime: '',
+						tableData: [{
+							  name: '山东如康',
+							  rongzi:'12',
+							  qiankuan: '1,091,137元',
+							  huozhi: '901,124元'
+							}, {
+							  name: '浦发5454345784',
+							  rongzi:'9',
+							  qiankuan: '384,112元',
+							  huozhi: '2,069,245元'
+							},{
+							  name: '山东如康',
+							  rongzi:'12',
+							  qiankuan: '1,091,137元',
+							  huozhi: '901,124元'
+							}, {
+							  name: '浦发5454345784',
+							  rongzi:'9',
+							  qiankuan: '384,112元',
+							  huozhi: '2,069,245元'
+							},{
+							  name: '山东如康',
+							  rongzi:'12',
+							  qiankuan: '1,091,137元',
+							  huozhi: '901,124元'
+							}, {
+							  name: '浦发5454345784',
+							  rongzi:'9',
+							  qiankuan: '384,112元',
+							  huozhi: '2,069,245元'
+							},{
+							  name: '山东如康',
+							  rongzi:'12',
+							  qiankuan: '1,091,137元',
+							  huozhi: '901,124元'
+							}, {
+							  name: '浦发5454345784',
+							  rongzi:'9',
+							  qiankuan: '384,112元',
+							  huozhi: '2,069,245元'
+							},{
+							  name: '山东如康',
+							  rongzi:'12',
+							  qiankuan: '1,091,137元',
+							  huozhi: '901,124元'
+							}, {
+							  name: '浦发5454345784',
+							  rongzi:'9',
+							  qiankuan: '384,112元',
+							  huozhi: '2,069,245元'
+							},{
+							  name: '山东如康',
+							  rongzi:'12',
+							  qiankuan: '1,091,137元',
+							  huozhi: '901,124元'
+							}, {
+							  name: '浦发5454345784',
+							  rongzi:'9',
+							  qiankuan: '384,112元',
+							  huozhi: '2,069,245元'
+							},{
+							  name: '山东如康',
+							  rongzi:'12',
+							  qiankuan: '1,091,137元',
+							  huozhi: '901,124元'
+							}, {
+							  name: '浦发5454345784',
+							  rongzi:'9',
+							  qiankuan: '384,112元',
+							  huozhi: '2,069,245元'
+							},{
+							  name: '山东如康',
+							  rongzi:'12',
+							  qiankuan: '1,091,137元',
+							  huozhi: '901,124元'
+							}, {
+							  name: '浦发5454345784',
+							  rongzi:'9',
+							  qiankuan: '384,112元',
+							  huozhi: '2,069,245元'
+							},{
+							  name: '山东如康',
+							  rongzi:'12',
+							  qiankuan: '1,091,137元',
+							  huozhi: '901,124元'
+							}, {
+							  name: '浦发5454345784',
+							  rongzi:'9',
+							  qiankuan: '384,112元',
+							  huozhi: '2,069,245元'
+							},{
+							  name: '山东如康',
+							  rongzi:'12',
+							  qiankuan: '1,091,137元',
+							  huozhi: '901,124元'
+							}, {
+							  name: '浦发5454345784',
+							  rongzi:'9',
+							  qiankuan: '384,112元',
+							  huozhi: '2,069,245元'
+							},{
+							  name: '山东如康',
+							  rongzi:'12',
+							  qiankuan: '1,091,137元',
+							  huozhi: '901,124元'
+							}, {
+							  name: '浦发5454345784',
+							  rongzi:'9',
+							  qiankuan: '384,112元',
+							  huozhi: '2,069,245元'
+							},{
+							  name: '山东如康',
+							  rongzi:'12',
+							  qiankuan: '1,091,137元',
+							  huozhi: '901,124元'
+							}, {
+							  name: '浦发5454345784',
+							  rongzi:'9',
+							  qiankuan: '384,112元',
+							  huozhi: '2,069,245元'
+							},{
+							  name: '山东如康',
+							  rongzi:'12',
+							  qiankuan: '1,091,137元',
+							  huozhi: '901,124元'
+							}, {
+							  name: '浦发5454345784',
+							  rongzi:'9',
+							  qiankuan: '384,112元',
+							  huozhi: '2,069,245元'
+							},{
+							  name: '山东如康',
+							  rongzi:'12',
+							  qiankuan: '1,091,137元',
+							  huozhi: '901,124元'
+							}, {
+							  name: '浦发5454345784',
+							  rongzi:'9',
+							  qiankuan: '384,112元',
+							  huozhi: '2,069,245元'
+							}],
+						currentRow: null,
+						rongziList: {
+							  header: ['融资单号','合同金额', '融资金额','融资时间'],
+							  data: [
+								['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+								['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+								['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+								['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+								['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+								['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+								['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+								['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+								['', '', '', ''],
+								['', '', '', ''],
+								['', '', '', ''],
+								['', '', '', ''],
+								['', '', '', ''],
+								['', '', '', '']],
+							  index: true,
+							  rowNum:8,
+							  columnWidth: [50],
+							  indexHeader:'',
+							  align: ['center','center','center','left'],
+							  headerBGC:'#0088ff44',
+							  oddRowBGC:'#004cff22',
+							  evenRowBGC:'#0000ff11',
+							  carousel:'page',
+							  waitTime:4000
+							},
+							huankuanList: {
+								  header: ['融资单号','合同金额', '还款金额','还款时间'],
+								  data: [
+									['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+									['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+									['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+									['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+									['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+									['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+									['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+									['RZDH-df20210122', '545,124元','163,537元','2021-01-22'],
+									['', '', '', ''],
+									['', '', '', ''],
+									['', '', '', ''],
+									['', '', '', ''],
+									['', '', '', ''],
+									['', '', '', '']],
+								  index: true,
+								  rowNum:8,
+								  columnWidth: [50],
+								  indexHeader:'',
+								  align: ['center','center','center','left'],
+								  headerBGC:'#0088ff44',
+								  oddRowBGC:'#004cff22',
+								  evenRowBGC:'#0000ff11',
+								  carousel:'page',
+								  waitTime:4000
+								},
+								yvjingList:{
+								  header: ['合同号', '类型','预警','天数'],
+								  data: [
+									['HTH-jl20210115','逾期','<div class="dot bg-red"/>','4'],
+									['HTH-jl20210115','逾期','<div class="dot bg-orange"/>','4'],
+									['HTH-jl20210115','逾期','<div class="dot bg-red"/>','4'],
+									['HTH-jl20210115','逾期','<div class="dot bg-orange"/>','4'],
+									['HTH-jl20210115','逾期','<div class="dot bg-red"/>','4'],
+									['HTH-jl20210115','逾期','<div class="dot bg-orange"/>','4'],
+									['HTH-jl20210115','逾期','<div class="dot bg-red"/>','4'],
+									['HTH-jl20210115','逾期','<div class="dot bg-orange"/>','4'],
+									['', '', '',''],
+									['', '', '','']],
+								  index: true,
+								  rowNum:6,
+								  columnWidth: [50,],
+								  indexHeader:'',
+								  align: ['center','center','center','left'],
+								  headerBGC:'#0088ff44',
+								  oddRowBGC:'#004cff22',
+								  evenRowBGC:'#0000ff11',
+								  carousel:'page',
+								  waitTime:4000
+								},
+						flag: false,
+						wc:null,
+						wordCloud:{
+							  backgroundColor:'rgba(0, 0, 0, 0)',
+							  tooltip: {
+								  backgroundColor: 'rgba(0, 0, 0, 0)',
+								  show: true
+							  },
+							  fontSizeFactor:0.01,
+							  maxFontSize:50,
+							  minFontSize:8,
+							  // imageShape: 'img/kun.jpg',
+							  // ellipticity: 1,
+							  list: [
+								  ['冷冻猪头',80893601],
+								  ['四号肉',31644379],
+								  ['冷冻猪颈骨',31415253],
+								  ['冷冻猪前肘',22743867],
+								  ['冷冻带骨猪后腿',21867730],
+								  ['猪头',21588372],
+								  ['冷冻猪脚 ',19782638],
+								  ['冷冻猪背骨',19532415],
+								  ['冷冻猪碎膘',19217348],
+								  ['冷冻猪手',18840698],
+								  ['二号肉',18597007],
+								  ['冷冻猪肋排',17232145],
+								  ['冷冻鸡全腿',15966186],
+								  ['冷冻带骨羔羊前四分体',12911408],
+								  ['冷冻带骨羔羊排',12808069],
+								  ['冷冻猪背皮',12387148],
+								  ['冷冻猪背膘 ',12334256],
+								  ['冷冻猪腿(去骨去皮)',11796440],
+								  ['带骨后腿',10566043],
+								  ['冷冻猪髋骨',10526724],
+								  //下面是重复
+								  ['冷冻猪脚 ',19782638],
+								  ['冷冻猪背骨',19532415],
+								  ['冷冻猪碎膘',19217348],
+								  ['冷冻猪手',18840698],
+								  ['二号肉',18597007],
+								  ['冷冻猪肋排',17232145],
+								  ['冷冻鸡全腿',15966186],
+								  ['冷冻带骨羔羊前四分体',12911408],
+								  ['冷冻带骨羔羊排',12808069],
+								  ['冷冻猪背皮',12387148],
+								  ['冷冻猪背膘 ',12334256],
+								  ['冷冻猪腿(去骨去皮)',11796440],
+								  ['带骨后腿',10566043],
+								  ['冷冻猪髋骨',10526724],
+								  ['冷冻猪脚 ',19782638],
+								  ['冷冻猪背骨',19532415],
+								  ['冷冻猪碎膘',19217348],
+								  ['冷冻猪手',18840698],
+								  ['二号肉',18597007]
+								  ],
+							  color: '#15a4fa'
+						  },
+						  areaList: [{n:"融资金额",v:"23,456",u:"万元",c:"text-orange"},
+						  			{n:"日均余额",v:"300",u:"万元",c:"text-orange"},
+						  			{n:"管控总额度",v:"50,000",u:"万元",c:"text-blue"},
+						  			{n:"已占用额度",v:"20,000",u:"万元",c:"text-blue"},
+						  			{n:"剩余总额度",v:"30000",u:"万元",c:"text-blue"},
+						  			{n:"平均占用天数",v:"30",u:"",c:"text-blue"},
+						],
+					}
+				},
+				created:function(){
+					this.currentTime()
+				},
+				mounted:function(){},
+				updated:function(){
+					var _this = this
+					if(!this.flag){
+						_this.wc = new Js2WordCloud(document.getElementById("container1"))
+						// this.wc = new Js2WordCloud(this.container)
+						_this.wc.setOption(_this.wordCloud)
+						this.flag = true
+					}
+				},
+				methods:{
+					handleCurrentChange(val) {
+					    this.currentRow = val;
+					 },
+					getTime: function() {
+						var _this = this;
+						let yy = new Date().getFullYear();
+						let mm = new Date().getMonth() + 1;
+						let dd = new Date().getDate();
+						let hh = new Date().getHours();
+						let mf = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
+						let ss = new Date().getSeconds() < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
+						_this.gettime = yy + '年' + mm + '月' + dd + '日 ' + hh + ':' + mf + ':' + ss;
+					},
+					currentTime() {
+						setInterval(this.getTime, 500)}
+				}
+			}) ;
+		</script>
+	</body>
+</html>
+
+<style type="text/css">
+	[v-cloak] {
+		display: none !important;
+	}
+
+	/** ...........滚动条........... **/
+
+	::-webkit-scrollbar {
+		width: 6px;
+		height: 6px;
+	}
+
+	::-webkit-scrollbar-button:vertical {
+		display: none;
+	}
+
+	::-webkit-scrollbar-track,
+	::-webkit-scrollbar-corner {
+		width: 12px;
+		border-radius: 10px;
+		background-color: #00000000;
+	}
+
+	::-webkit-scrollbar-thumb {
+		border-radius: 10PX;
+		background-color: #0a4e9f99;
+	}
+
+	::-webkit-scrollbar-thumb:vertical:hover {
+		background-color: #0a4e9f99;
+	}
+
+	::-webkit-scrollbar-thumb:vertical:active {
+		background-color: #0a4e9f99;
+	}
+
+	/** ...........滚动条 end........... **/
+	.container-bg {
+		background: url(img/bg-img.png) left top no-repeat;
+		flex-flow: row nowrap;
+		justify-content: center;
+		outline: none;
+	}
+
+	.bg-red {
+		background-color: #f5310a;
+	}
+
+	.bg-orange {
+		background-color: #ffaa00;
+	}
+
+	.bg-green {
+		background-color: #67cf99;
+	}
+
+	.dot {
+		width: 10px;
+		height: 10px;
+		border-radius: 5px;
+		margin: 0 auto;
+		margin-top: 15px
+	}
+
+	.text-orange {
+		color: #FFB026;
+	}
+
+	.text-blue {
+		color: #25D9F4;
+	}
+
+	.card-number {
+		padding: 0 5px 0 5px;
+		font-size: 28px;
+		font-weight: 500;
+	}
+
+	.margin-top {
+		margin-top: 20px;
+	}
+
+	html,
+	body,
+	#app {
+		/* font-family: "agency fb"; */
+		width: 100%;
+		height: 100%;
+		margin: 0px;
+		padding: 0px;
+		background-color: #070A17
+	}
+
+	html,
+	body {
+		font-family: "SF Pro HK", "HanHei TC", "SF Pro Text", "Myriad Set Pro", "SF Pro Icons", "PingFang HK", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+	}
+
+	.cardStyleA {
+		background: #061e5d80;
+		/* border: 1px solid #00AAFF99; */
+		box-shadow: #0044cc99 0px 0px 18px inset;
+		/* padding: 20px; */
+		border-radius: 0;
+	}
+
+	.border3 {
+		background-image: url("img/monitor/border3T.png"), url("img/monitor/border3B.png");
+		background-repeat: no-repeat, no-repeat;
+		background-position: 0 0, 100% 100%;
+	}
+
+	.border1 {
+		background-image: url("img/monitor/border1T.png"), url("img/monitor/border1B.png");
+		background-repeat: no-repeat, no-repeat;
+		background-position: 0 0, 100% 100%;
+	}
+
+	.border2 {
+		background-image: url("img/monitor/border2T.png"), url("img/monitor/border2B.png");
+		background-repeat: no-repeat, no-repeat;
+		background-position: 0 0, 100% 100%;
+	}
+
+	.el-card {
+		border: none;
+	}
+
+	.el-card__body {
+		padding: 12px;
+	}
+
+	.card-content {
+		padding: 0px 0 20px 0;
+		text-align: center;
+	}
+
+	.ranking-board {
+		-webkit-box-shadow: 0 0 3px #00f;
+		box-shadow: 0 0 3px #00f;
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		-ms-flex-direction: column;
+		flex-direction: column;
+		background-color: rgba(6, 30, 93, .5);
+		border-top: 2px solid rgba(1, 153, 209, .5);
+		padding: 0 10px;
+	}
+
+	.card-title {
+		padding: 20px 0 10px 0;
+		text-align: center;
+		color: #fff;
+		font-size: 22px;
+		font-weight: 500;
+	}
+
+	.padding-lr {
+		padding-left: 15px;
+		padding-right: 15px
+	}
+
+	.btnStyle {
+		width: 60px;
+		background-color: #006AFF66;
+		color: #fff;
+		line-height: 26px;
+		padding: 4px 12px;
+		font-size: 12px;
+	}
+
+	.btnStyle.is-active {
+		background-color: #0055cc;
+	}
+
+	.el-carousel__item h3 {
+		color: #475669;
+		font-size: 14px;
+		opacity: 0.75;
+		line-height: 200px;
+		margin: 0;
+	}
+
+	.el-carousel__item:nth-child(2n) {
+		background-color: #99a9bf;
+	}
+
+	.el-carousel__item:nth-child(2n+1) {
+		background-color: #d3dce6;
+	}
+
+	.cardNone .el-card__body {
+		padding: 0;
+	}
+
+	.card-bg {
+		background-color: #004fde30;
+	}
+
+	.card-bg.is-active {
+		background-color: #004fde80;
+	}
+
+	.numBox {
+		height: 30px;
+		background: #061e5d80;
+		box-shadow: #0044cc99 0px 0px 8px inset;
+		border: 1px solid #00FFFF40;
+		border-radius: 4px;
+	}
+
+	.numBox p {
+		font-size: 28px;
+		margin: 0;
+		line-height: 30px;
+		color: #FFB026;
+		padding-left: 4px;
+	}
+
+	.thead-bg {
+		width: 100%;
+		/* height: 100%; */
+		background-color: #09071d4d;
+		box-shadow: #0044cc99 0px 0px 18px inset;
+		line-height: 38px;
+		border-radius: 4px;
+		text-align: center;
+		color: #fff;
+		padding: 0 10px;
+	}
+
+	.thead-bg .th {
+		color: #cfd5e5;
+		font-size: 14px;
+		text-align: center;
+	}
+
+	.tbody-box {
+		height: 920px;
+		overflow-y: scroll;
+		margin-top: 10px;
+	}
+
+	.tbody-bg {
+		background-color: #004cff22;
+		border-radius: 4px;
+		line-height: 38px;
+		padding: 0 10px;
+		margin-bottom: 10px;
+	}
+
+	.tbody-bg .td {
+		color: #cfd5e5;
+		font-size: 14px;
+		text-align: center;
+	}
+
+	.el-button-m {
+		padding: 6px 10px;
+	}
+
+	.bor-none {
+		border: none;
+	}
+
+	.text-xs {
+		font-size: 12px;
+	}
+
+	.el-table th {
+		background-color: #0088ff44;
+		padding: 8px 0;
+	}
+
+	.el-table td {
+		padding: 8px 0;
+	}
+
+	.el-table tr {
+		background-color: #004cff00;
+	}
+
+	.el-table__header-wrapper {
+		overflow: hidden;
+		border-radius: 4px;
+	}
+
+	.el-table--striped .el-table__body tr.el-table__row--striped td {
+		background: #004cff22;
+	}
+
+	.el-table,
+	.el-table__expanded-cell {
+		background-color: #00000000;
+	}
+
+	.el-table td,
+	.el-table th.is-leaf {
+		border: none;
+		text-align: center;
+	}
+
+	.el-table--striped .el-table__body tr.el-table__row--striped.current-row td {
+		background-color: #3ba5ff80;
+	}
+
+	.el-table--enable-row-hover .el-table__body tr:hover>td {
+		background-color: #3ba5ff80;
+	}
+
+	.el-table__body tr.current-row>td {
+		background-color: #3ba5ff80;
+	}
+
+	.el-table {
+		color: #fff;
+	}
+
+	.el-table thead {
+		color: #fff;
+		font-weight: 500;
+	}
+
+	.el-table--border::after,
+	.el-table--group::after,
+	.el-table::before {
+		content: '';
+		position: absolute;
+		background-color: #004dffcc;
+		z-index: 1;
+	}
+
+	.el-table::before {
+		height: 0;
+	}
+</style>
