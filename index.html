@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>东方神鹰冷库综合监控中心</title>
+		<title>东方神鹰冷库业务综合监控中心</title>
 
 		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 		<!-- 引入组件库 -->
@@ -89,7 +89,12 @@
 							</el-card>
 						</el-col>
 						<el-col :span="10">
-							12
+							<div class="" style="text-align: center;">
+								<div class="card-content">
+									<dv-flyline-chart-enhanced :config="wareHouseInfo" style="width:740px;height:440px;margin:0 auto;" />
+								</div>
+								<!-- <img src="img/monitor/3d.png" style="margin: 20PX auto 0;" > -->
+							</div>
 						</el-col>
 						<!-- <el-col :span="3">
 							<el-card shadow="never" class="cardStyleA border1" style="height: 215px;">
@@ -103,7 +108,7 @@
 							<el-card shadow="never" class="cardStyleA border2" style="height: 450px;">
 								<h4 class="cardtitleA">品类分布</h4>
 								<dv-charts :option="chartDetails1" style="width100%;height:322px;" v-if="showN"></dv-charts>
-								<dv-charts :option="chartDetails2" style="width100%;height:322px;"  v-if="!showN"></dv-charts>
+								<dv-charts :option="chartDetails2" style="width100%;height:322px;" v-if="!showN"></dv-charts>
 								<el-row :gutter="10">
 									<el-col :span="12">
 										<el-card shadow="never" class="card-bg" :class="showN?'is-active':''" @click.native="showN=true">
@@ -112,7 +117,7 @@
 										</el-card>
 									</el-col>
 									<el-col :span="12">
-										<el-card shadow="never" class="card-bg"  :class="!showN?'is-active':''" @click.native="showN=false">
+										<el-card shadow="never" class="card-bg" :class="!showN?'is-active':''" @click.native="showN=false">
 											<img src="img/monitor/bingtu2.png" style="width: 30px; vertical-align: middle;margin-right: 10px;">
 											<p style="display: inline-block; margin: 0; color: #fff;">非标品分布</p>
 										</el-card>
@@ -144,7 +149,7 @@
 									<el-col :span="12" style="text-align: right;">
 										<span class="btnStyle " :class="ifWeek?'is-active':''" @click="switchKucun">近一周</span>
 										<span class="btnStyle" :class="!ifWeek?'is-active':''" @click="switchKucun">近一月</span>
-										
+
 									</el-col>
 								</el-row>
 								<dv-charts :option="storagechangeList" style="width:100%;height:260px;margin:0 auto"></dv-charts>
@@ -179,12 +184,50 @@
 				el: '#app',
 				data: function() {
 					return {
-						systemName: "东方神鹰冷库业务综合监控中心",
+						systemName: "中国工商银行供应链金融监控中心",
 						gettime: '',
 						showN:true,
 						ifWeek:true,
 						inNumber:'123032303',
 						oweNumber:'133032303',
+						wareHouseInfo:{
+							 points: [{name: 'A月台1',coordinate: [0.391988555,0.261072261],icon: {show: true,src: 'img/orange.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'A月台2',coordinate: [0.420600858,0.275058275],icon: {show: true,src: 'img/orange.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'A月台3',coordinate: [0.449213162,0.289044289],icon: {show: true,src: 'img/green.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'A月台4',coordinate: [0.477825465,0.303030303],icon: {show: true,src: 'img/green.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'A月台5',coordinate: [0.506437768,0.317016317],icon: {show: true,src: 'img/orange.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'A月台6',coordinate: [0.535050072,0.331002331],icon: {show: true,src: 'img/orange.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'A月台7',coordinate: [0.563662375,0.344988345],icon: {show: true,src: 'img/blue.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'A月台8',coordinate: [0.592274678,0.358974359],icon: {show: true,src: 'img/orange.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'A月台9',coordinate: [0.620886981,0.372960373],icon: {show: true,src: 'img/blue.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'A月台10',coordinate: [0.649499285,0.386946387],icon: {show: true,src: 'img/orange.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'A月台11',coordinate: [0.678111588,0.400932401],icon: {show: true,src: 'img/blue.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'B月台1',coordinate: [0.319027182,0.594405594],icon: {show: true,src: 'img/orange.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'B月台2',coordinate: [0.334763948,0.557109557],icon: {show: true,src: 'img/green.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'B月台3',coordinate: [0.350500715,0.51981352],icon: {show: true,src: 'img/orange.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'B月台4',coordinate: [0.366237482,0.482517483],icon: {show: true,src: 'img/blue.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'B月台5',coordinate: [0.381974249,0.445221445],icon: {show: true,src: 'img/blue.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'B月台6',coordinate: [0.397711016,0.407925408],icon: {show: true,src: 'img/orange.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'C月台1',coordinate: [0.500715308,0.682983683],icon: {show: true,src: 'img/green.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'C月台2',coordinate: [0.512160229,0.65034965],icon: {show: true,src: 'img/orange.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'C月台3',coordinate: [0.52360515,0.617715618],icon: {show: true,src: 'img/orange.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'C月台4',coordinate: [0.535050072,0.585081585],icon: {show: true,src: 'img/orange.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'C月台5',coordinate: [0.546494993,0.552447552],icon: {show: true,src: 'img/green.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'C月台6',coordinate: [0.557939914,0.51981352],icon: {show: true,src: 'img/orange.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'C月台7',coordinate: [0.569384835,0.487179487],icon: {show: true,src: 'img/blue.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},
+								{name: 'C月台8',coordinate: [0.580829757,0.454545455],icon: {show: true,src: 'img/blue.png',width:10,height:10},halo: {show: true,color: '#8378ea',duration:[30,30],radius:38,}},],
+							lines: [{
+								  source: 'C月台6',
+								  target: 'C月台6',
+								  duration:[30,30]
+								}],
+							  
+							  k:2,
+							  text: {
+								  show: false,
+								},
+							  bgImgSrc: 'img/monitor/3d.png'
+							},
 						averageDays:{
 							data: [66, 45],
 							shape: 'roundRect',
@@ -504,15 +547,19 @@
 	.bg-green {
 		background-color: #67cf99;
 	}
+
 	.text-green {
 		color: #67cf99;
 	}
+
 	.text-orange {
 		color: #FFB026;
 	}
+
 	.text-white {
 		color: #ffffff;
 	}
+
 	.text-blue {
 		color: #25D9F4;
 	}
@@ -522,11 +569,13 @@
 		font-size: 28px;
 		font-weight: 500;
 	}
+
 	.card-number2 {
 		padding: 0 5px 0 5px;
 		font-size: 18px;
 		font-weight: 500;
 	}
+
 	.margin-top {
 		margin-top: 20px;
 	}
